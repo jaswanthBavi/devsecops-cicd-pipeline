@@ -13,6 +13,7 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
+                    export PATH=/usr/local/bin:$PATH
                     python3 --version
                     python3 -m venv venv
                     venv/bin/python -m pip install --upgrade pip
@@ -31,13 +32,33 @@ pipeline {
 
         stage('Snyk Security Scan') {
             steps {
-                sh 'snyk test'
+                withCredentials([
+                    string(
+                        credentialsId: 'snyk-token',
+                        variable: 'SNYK_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        export PATH=/usr/local/bin:$PATH
+                        snyk test
+                    '''
+                }
             }
         }
 
         stage('Snyk Monitor') {
             steps {
-                sh 'snyk monitor'
+                withCredentials([
+                    string(
+                        credentialsId: 'snyk-token',
+                        variable: 'SNYK_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        export PATH=/usr/local/bin:$PATH
+                        snyk monitor
+                    '''
+                }
             }
         }
     }
