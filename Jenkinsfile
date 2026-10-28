@@ -29,7 +29,7 @@ pipeline {
                 '''
             }
         }
-
+        
         stage('Snyk Security Scan') {
             steps {
                 withCredentials([
@@ -40,7 +40,8 @@ pipeline {
                 ]) {
                     sh '''
                         export PATH=/usr/local/bin:$PATH
-                        snyk test
+                        venv/bin/python -m pip install -r requirements.txt
+                        snyk test --file=requirements.txt --package-manager=pip
                     '''
                 }
             }
@@ -56,11 +57,12 @@ pipeline {
                 ]) {
                     sh '''
                         export PATH=/usr/local/bin:$PATH
-                        snyk monitor
+                        snyk monitor --file=requirements.txt --package-manager=pip
                     '''
                 }
             }
         }
+
     }
 }
 
