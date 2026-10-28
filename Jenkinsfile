@@ -41,8 +41,8 @@ pipeline {
                     sh '''
                         export PATH=/usr/local/bin:$PATH
                         venv/bin/python -m pip install -r requirements.txt
-                        snyk test --file=requirements.txt --package-manager=pip
-                    '''
+                        snyk test --command=venv/bin/python --file=requirements.txt --package-manager=pip
+                     '''
                 }
             }
         }
@@ -57,8 +57,8 @@ pipeline {
                 ]) {
                     sh '''
                         export PATH=/usr/local/bin:$PATH
-                        snyk monitor --file=requirements.txt --package-manager=pip
-                    '''
+                        snyk monitor --command=venv/bin/python --file=requirements.txt --package-manager=pip
+                     '''
                 }
             }
         }
